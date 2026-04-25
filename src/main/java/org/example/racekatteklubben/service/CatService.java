@@ -26,15 +26,19 @@ public class CatService {
     public int addCat(String imageUrl, String catName, Race race, int age, YearOrMonth yearOrMonth, Gender gender, int memberId, MultipartFile file)throws IOException {
         validateCat(catName, race, age,yearOrMonth, gender);
 
-
-        if(file.isEmpty()) throw new IllegalArgumentException("file is empty");
-        String fileName = file.getOriginalFilename();
-        Path path = Paths.get(uploadPlace + fileName);
-        Files.createDirectories(path.getParent());
-        Files.write(path, file.getBytes());
+        String fileName = null;
+        if (file != null && !file.isEmpty()) {
+            fileName = file.getOriginalFilename();
+            Path path = Paths.get(uploadPlace + fileName);
+            Files.createDirectories(path.getParent());
+            Files.write(path, file.getBytes());
+        }
 
         Cat cat = new Cat(imageUrl, catName, race, age,yearOrMonth, gender, memberId);
-        cat.setImages(fileName);
+
+        if (fileName != null) {
+            cat.setImages(fileName);
+        }
 
         return catRepository.createCat(cat);
     }
@@ -78,11 +82,12 @@ public class CatService {
     public void removeCat(int catId) throws IOException {
         Cat cat = findCatById(catId);
 
-        Path path = Paths.get(uploadPlace + cat.getImages());
-        Files.deleteIfExists(path);
+        if (cat.getImages() != null && !cat.getImages().isBlank()) {
+            Path path = Paths.get(uploadPlace + cat.getImages());
+            Files.deleteIfExists(path);
+        }
+
         catRepository.deleteCat(catId);
-
-
     }
 
     public void removeCatByMemberId(int memberId) {catRepository.deleteCatByMemberId(memberId);}
