@@ -6,28 +6,13 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-    <nav id="navbar">
-        <div class="nav-header">
-            <h1 id="company-name">RaceKatteKlubben</h1>
-        </div>
-        <div class="nav-links">
-            <a class="nav-link" href="/home">Hjem</a>
-            <a class="nav-link" href="/profile">Min Profil</a>
-        </div>
-
-        <a id="log-out-button" th:href="@{/logout}">Log ud</a>
-    </nav>
+    <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
     <h1>Velkommen, <span th:text="${member.memberName}"></span>!</h1>
 
     <div class="home-search-container">
         <div class="cat-search">
-            <form method="post" th:action="@{/home/cats}">
-                <div class="search-bar">
-                    <input type="text" name="keyword" placeholder="Søg efter kat...">
-                    <button type="submit">Søg</button>
-                </div>
-            </form>
+            <form th:replace="~{/components/search/searchbar :: searchBar(@{/cats/search}, 'Søg efter katte..')}"></form>
 
             <div class="cat-card" th:each="cat: ${cats}">
                 <img th:src="@{'/images/' + ${cat.images}}" alt="Cat Image">
@@ -43,12 +28,7 @@
             </div>
         </div>
         <div class="member-search">
-            <form method="post" th:action="@{/home/members}">
-                <div class="search-bar">
-                    <input type="text" name="keyword" placeholder="Søg efter medlemmer...">
-                    <button type="submit">Søg</button>
-                </div>
-            </form>
+            <form th:replace="~{/components/search/searchbar :: searchBar(@{/members/search}, 'Søg efter medlemmer...')}"></form>
 
             <div class="member-card" th:each="member: ${members}">
                 <div class="member-info">

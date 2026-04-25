@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Katte | RaceKatteKlubben</title>
+    <link rel='stylesheet' th:href="@{/css/styles.css}">
+</head>
+<body>
+    <nav th:replace="~{layout/navbar :: navbar}"></nav>
+    <h1>Dine Katte</h1>
+    <a th:href="@{/profile/cats/create}" class="btn-create">Opret ny Kat</a>
+    <table th:replace="~{components/tables/cat-table :: catTable(${cats}, ${member.id})}"></table>
+</body>
+</html>

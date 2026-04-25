@@ -6,21 +6,11 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-    <nav id="navbar">
-        <div class="nav-header">
-            <h1 id="company-name">RaceKatteKlubben</h1>
-        </div>
-        <div class="nav-links">
-            <a class="nav-link" href="/home">Hjem</a>
-            <a class="nav-link" href="/profile">Min Profil</a>
-        </div>
-
-        <a id="log-out-button" th:href="@{/logout}">Log ud</a>
-    </nav>
+    <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
     <h1>Opdater kat</h1>
 
-    <form id="update-Cat-Form" th:object="${cat}" method="post" th:action="@{/profile/{memberId}/cats/update/{id}(memberId=${memberId}, id=${cat.id})}">
+    <form id="update-Cat-Form" th:object="${cat}" method="post" th:action="@{/profile/cats/update/{catId}(catId=${cat.id})}">
         <input type="hidden" name="id" th:value="*{id}">
         <div class="input-field">
             <label for="name">Images:</label>
@@ -41,8 +31,7 @@
                         th:text="${race}"
                 >
                 </option>
-                </select>
-
+            </select>
         </div>
 
         <div class="input-field">
@@ -72,12 +61,12 @@
 
         </div>
 
-        <input type="hidden" name="memberId" th:value="${memberId}">
+        <input type="hidden" name="memberId" th:value="${member.id}">
 
 
         <div class="button-field">
             <button type="submit" id="update-cat">Opdater</button>
-            <a th:href="@{/profile/{memberId}/cats(memberId=${member.id})}">
+            <a th:href="@{/profile/cats}">
                 <button type="button" id="cancel">Cancel</button>
 
             </a>

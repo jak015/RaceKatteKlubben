@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Profil | RaceKatteKlubben</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <nav th:replace="~{layout/navbar :: navbar}"></nav>
+
+    <h1>Hej <span th:text="${member.memberName}"></span>!</h1>
+
+    <nav class="actions">
+        <a class="btn" th:href="@{/profile/cats}"><button type="button">Mine katte</button></a>
+        <a class="btn" href="/profile/update"><button type="button">Opdater Profil</button></a>
+
+        <form class="button" th:action="@{/members/delete/{id}(id=${member.id})}" method="post"
+              onsubmit="return confirm('Er du sikker på at du vil slette din konto?')">
+            <button class="btn btn-danger" type="submit">Slet konto</button>
+        </form>
+    </nav>
+</body>
+</html>

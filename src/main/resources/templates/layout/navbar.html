@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<nav th:fragment="navbar" id="navbar">
+    <div class="nav-header">
+        <h1 id="company-name">RaceKatteKlubben</h1>
+    </div>
+    <div class="nav-links">
+        <a class="nav-link" href="/home">Hjem</a>
+        <a class="nav-link" href="/profile">Min Profil</a>
+        <a class="nav-link" href="/home">About</a>
+    </div>
+
+    <a id="log-out-button" th:href="@{/auth/logout}">Log ud</a>
+</nav>
+
+</body>
+</html>

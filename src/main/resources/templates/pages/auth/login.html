@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login | RaceKatteKlubben</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body class="auth-page">
+    <main id="login-screen">
+        <h1>Login</h1>
+
+        <form th:object="${member}" method="post" th:action="@{/auth/login}">
+            <div class="input-field">
+                <label for="email">Email:</label>
+                <input type="email" th:field="*{email}" id="email" placeholder="Indtast email...">
+            </div>
+
+            <div class="input-field">
+                <label for="password">Password:</label>
+                <input type="password" th:field="*{password}" id="password" placeholder="Indtast Adgangskode...">
+            </div>
+
+            <p th:if="${error}" th:text="${error}" class="error-message"></p>
+
+            <nav class="button-field">
+                <a href="/auth/register" class="signup-btn">Tilmeld</a>
+                <button type="submit" id="login">Login</button>
+            </nav>
+        </form>
+    </main>
+</body>
+</html>

@@ -72,6 +72,10 @@ public class MemberService {
         return existingHashedPassword;
     }
 
+    public Member findMemberById(int memberId) {
+        return memberRepository.findMemberById(memberId);
+    }
+
     public void removeMember(int id) {memberRepository.removeMember(id);}
 
     private void validateMemberName(String memberName) {

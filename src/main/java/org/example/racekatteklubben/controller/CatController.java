@@ -7,6 +7,7 @@ import org.example.racekatteklubben.models.enums.Gender;
 import org.example.racekatteklubben.models.enums.Race;
 import org.example.racekatteklubben.models.enums.YearOrMonth;
 import org.example.racekatteklubben.service.CatService;
+import org.example.racekatteklubben.service.MemberService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -18,47 +19,39 @@ import java.io.IOException;
 public class CatController {
 
     private final CatService catService;
+    private final MemberService memberService;
 
-    public CatController(CatService catService) {
+    public CatController(CatService catService, MemberService memberService) {
         this.catService = catService;
+        this.memberService = memberService;
     }
 
-    @GetMapping("/profile/{memberId}/cats")
-    public String showCats(HttpSession session, Model model, @PathVariable int memberId) {
-        Member member = (Member) session.getAttribute("loggedInMember");
-
-        if (member == null) {
-            return "redirect:/login";
-        }
-
+    @GetMapping("/profile/cats")
+    public String showCats(HttpSession session, Model model) {
+        Integer memberId = (Integer) session.getAttribute("memberId");
+        Member member = memberService.findMemberById(memberId);
         model.addAttribute("member", member);
         model.addAttribute("cats", catService.findCatsByMemberId(memberId));
-        return "cat/catList";
+        return "pages/cat/catList";
     }
 
-    @GetMapping("/profile/{memberId}/cats/create")
-    public String showCreateCatForm(@ModelAttribute Cat cat, HttpSession session, Model model, @PathVariable int memberId) {
-        Member member = (Member) session.getAttribute("loggedInMember");
-
-        if (member == null) {
-            return "redirect:/login";
-        }
+    @GetMapping("/profile/cats/create")
+    public String showCreateCatForm(@ModelAttribute Cat cat, HttpSession session, Model model) {
+        Integer memberId = (Integer) session.getAttribute("memberId");
+        Member member = memberService.findMemberById(memberId);
 
         model.addAttribute("member", member);
         model.addAttribute("cat", new Cat());
         model.addAttribute("races", Race.values());
         model.addAttribute("yearOrMonths", YearOrMonth.values());
         model.addAttribute("genders", Gender.values());
-        return "cat/createCat";
+        return "pages/cat/createCat";
     }
 
-    @PostMapping("/profile/{memberId}/cats/create")
-    public String createCat(@ModelAttribute Cat cat, HttpSession session, Model model, @PathVariable int memberId, @RequestParam MultipartFile file ) {
-        Member member = (Member) session.getAttribute("loggedInMember");
-
-        if (member == null) {
-            return "redirect:/login";
-        }
+    @PostMapping("/profile/cats/create")
+    public String createCat(@ModelAttribute Cat cat, HttpSession session, Model model, @RequestParam MultipartFile file ) {
+        Integer memberId = (Integer) session.getAttribute("memberId");
+        Member member = memberService.findMemberById(memberId);
 
         model.addAttribute("member", member);
         model.addAttribute("cat", cat);
@@ -68,17 +61,13 @@ public class CatController {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return "redirect:/profile/{memberId}/cats";
+        return "redirect:/profile/cats";
     }
 
-    @GetMapping("profile/{memberId}/cats/update/{catId}")
-        public String ShowUpdateCatForm(HttpSession session, Model model, @PathVariable int memberId, @PathVariable int catId) {
-
-        Member member = (Member) session.getAttribute("loggedInMember");
-
-        if (member == null) {
-            return "redirect:/login";
-        }
+    @GetMapping("profile/cats/update/{catId}")
+        public String ShowUpdateCatForm(HttpSession session, Model model, @PathVariable int catId) {
+        Integer memberId = (Integer) session.getAttribute("memberId");
+        Member member = memberService.findMemberById(memberId);
 
         Cat cat = catService.findCatById(catId);
 
@@ -88,17 +77,13 @@ public class CatController {
         model.addAttribute("yearOrMonths", YearOrMonth.values());
         model.addAttribute("genders", Gender.values());
 
-        return "cat/updateCat";
-
+        return "pages/cat/updateCat";
     }
 
-    @PostMapping("profile/{memberId}/cats/update/{catId}")
-    public String updateCat(HttpSession session, Model model, @ModelAttribute Cat cat, @PathVariable int memberId, @PathVariable int catId) {
-        Member member = (Member) session.getAttribute("loggedInMember");
-
-        if (member == null) {
-            return "redirect:/login";
-        }
+    @PostMapping("profile/cats/update/{catId}")
+    public String updateCat(HttpSession session, Model model, @ModelAttribute Cat cat, @PathVariable int catId) {
+        Integer memberId = (Integer) session.getAttribute("memberId");
+        Member member = memberService.findMemberById(memberId);
 
         model.addAttribute("member", member);
         model.addAttribute("cat", cat);
@@ -106,36 +91,27 @@ public class CatController {
 
         catService.updateCat(cat.getId(),cat.getImages(),cat.getCatName(),cat.getRace(),cat.getAge(), cat.getYearOrMonth(), cat.getGender(), member.getId());
 
-        return "redirect:/profile/{memberId}/cats";
+        return "redirect:/profile/cats";
     }
 
-    @PostMapping("/cat/delete/{catId}")
-    public String deleteCat(Model model, HttpSession session,  @PathVariable int catId)throws IOException {
-        Member member = (Member) session.getAttribute("loggedInMember");
-
-        if (member == null) {
-            return "redirect:/login";
-        }
+    @PostMapping("/profile/cats/delete/{catId}")
+    public String deleteCat(Model model, HttpSession session,  @PathVariable int catId) throws IOException {
+        Integer memberId = (Integer) session.getAttribute("memberId");
+        Member member = memberService.findMemberById(memberId);
 
         model.addAttribute("member", member);
-        int memberId = member.getId();
         catService.removeCat(catId);
-        return "redirect:/profile/" + memberId + "/cats";
+        return "redirect:/profile/cats";
     }
 
-    @PostMapping("/home/cats")
+    @PostMapping("/cats/search")
     public String searchForCat(HttpSession session, Model model, @ModelAttribute Cat cat, @RequestParam String keyword) {
-        Member member = (Member) session.getAttribute("loggedInMember");
-
-        if (member == null) {
-            return "redirect:/login";
-        }
+        Integer memberId = (Integer) session.getAttribute("memberId");
+        Member member = memberService.findMemberById(memberId);
 
         model.addAttribute("member", member);
-
-        int memberId = member.getId();
         model.addAttribute("cats", catService.seachForCat(keyword));
         model.addAttribute("cat", cat);
-        return "home";
+        return "pages/home";
     }
 }

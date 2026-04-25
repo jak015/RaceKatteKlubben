@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+
+<div th:fragment="catActions(cat)" class="cat-actions">
+    <form th:action="@{/profile/cats/delete/{catId}(catId=${cat.id})}" method="post">
+        <button type="submit" onclick="return confirm('Er du sikker på du vil slette katten?')">Slet</button>
+
+    </form>
+    <form th:action="@{/profile/cats/update/{catId}(catId=${cat.id})}">
+        <input type="hidden" name="catId" th:value="${cat.id}">
+        <button type="submit">Opdater</button>
+    </form>
+</div>
+
+</body>
+</html>

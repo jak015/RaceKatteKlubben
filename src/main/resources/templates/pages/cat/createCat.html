@@ -6,23 +6,12 @@
     <link rel='stylesheet' th:href="@{/css/styles.css}">
 </head>
 <body>
-    <nav id="navbar">
-        <div class="nav-header">
-            <h1 id="company-name">RaceKatteKlubben</h1>
-        </div>
-        <div class="nav-links">
-            <a class="nav-link" href="/home">Hjem</a>
-            <a class="nav-link" href="/profile">Min Profil</a>
-        </div>
-
-        <a id="log-out-button" th:href="@{/logout}">Log ud</a>
-    </nav>
+    <nav th:replace="~{layout/navbar :: navbar}"></nav>
 
     <h1>Opret ny Kat</h1>
 
-    <form class="cat-form"  th:action="@{/profile/{memberId}/cats/create(memberId=${member.id})}" th:object="${cat}" method="post" enctype="multipart/form-data">
+    <form class="cat-form"  th:action="@{/profile/cats/create}" th:object="${cat}" method="post" enctype="multipart/form-data">
         <div class="input-field">
-
             <input type="file" name="file">
         </div>
 
@@ -37,11 +26,9 @@
                 <option value=""disabled selected>vælg race...</option>
                 <option th:each="race : ${races}"
                         th:value="${race}"
-                        th:text="${race}"
-                >
+                        th:text="${race}">
                 </option>
             </select>
-
         </div>
 
         <div class="input-field">
@@ -58,24 +45,24 @@
                         th:text="${yearOrMonth}">
                 </option>
             </select>
+        </div>
 
-            <div class="option-dropdown">
-                <label for="gender">Køn:</label>
-                <select  th:field="*{gender}" id="gender" placeholder="Vælg køn...">
-                    <option value=""disabled selected> vælg køn...</option>
-                    <option th:each="gender : ${genders}"
-                            th:value="${gender}"
-                            th:text="${gender}">
-                    </option>
-                </select>
+        <div class="option-dropdown">
+            <label for="gender">Køn:</label>
+            <select  th:field="*{gender}" id="gender" placeholder="Vælg køn...">
+                <option value=""disabled selected> vælg køn...</option>
+                <option th:each="gender : ${genders}"
+                        th:value="${gender}"
+                        th:text="${gender}">
+                </option>
+            </select>
+        </div>
 
-            </div>
-
-        <input type="hidden" name="memberId" th:value="${memberId}">
+        <input type="hidden" name="memberId" th:value="${member.id}">
 
         <div class="button-field">
             <button type="submit" id="create-cat">Opret</button>
-            <a th:href="@{/profile/{memberId}/cats(memberId=${member.id})}">
+            <a th:href="@{/profile/cats}">
                 <button type="button" id="cancel">Cancel</button>
             </a>
         </div>

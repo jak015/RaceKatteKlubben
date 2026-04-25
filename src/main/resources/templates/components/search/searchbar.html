@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<form th:fragment="searchBar(action, placeholder)" method="post" th:action="${action}" class="search-bar">
+  <input type="text" name="keyword" th:placeholder="${placeholder}">
+  <button type="submit">Søg</button>
+</form>
+
+</body>
+</html>
